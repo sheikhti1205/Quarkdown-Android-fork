@@ -468,7 +468,7 @@ tasks.register("printVersion") {
 allprojects {
     tasks.dependencyUpdates {
         rejectVersionIf {
-            Regex("[.-](alpha|beta|rc|m|preview|b|ea)", RegexOption.IGNORE_CASE) in candidate.version
+            Regex("[.-](alpha|beta|rc|cr|m|preview|b|ea)", RegexOption.IGNORE_CASE) in candidate.version
         }
     }
 
