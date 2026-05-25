@@ -5,6 +5,7 @@ import java.time.Year
 
 plugins {
     kotlin("jvm") version "2.3.10"
+    id("com.android.application") version "8.2.2" apply false
     id("org.jetbrains.dokka") version "2.0.0"
     id("org.jlleitschuh.gradle.ktlint") version "14.0.1"
     id("com.github.ben-manes.versions") version "0.53.0"
@@ -17,21 +18,24 @@ version = file("version.txt").readText().trim()
 
 allprojects {
     repositories {
+        google()
         mavenCentral()
     }
 }
 
 subprojects {
-    apply(plugin = "org.jetbrains.dokka")
-    apply(plugin = "org.jlleitschuh.gradle.ktlint")
-    apply(plugin = "com.github.ben-manes.versions")
-    apply(plugin = "se.patrikerdes.use-latest-versions")
+    if (name != "quarkdown-android") {
+        apply(plugin = "org.jetbrains.dokka")
+        apply(plugin = "org.jlleitschuh.gradle.ktlint")
+        apply(plugin = "com.github.ben-manes.versions")
+        apply(plugin = "se.patrikerdes.use-latest-versions")
+    }
 }
 
 // Fat JAR / Distribution dependencies
 gradle.projectsEvaluated {
     dependencies {
-        subprojects.forEach {
+        subprojects.filter { it.name != "quarkdown-android" }.forEach {
             when {
                 it.extra.has("noRuntime") && it.extra["noRuntime"] == true -> {
                     compileOnly(it)
@@ -464,7 +468,7 @@ tasks.register("printVersion") {
 allprojects {
     tasks.dependencyUpdates {
         rejectVersionIf {
-            Regex("[.-](alpha|beta|rc|cr|m|preview|b|ea)", RegexOption.IGNORE_CASE) in candidate.version
+            Regex("[.-](alpha|beta|rc|m|preview|b|ea)", RegexOption.IGNORE_CASE) in candidate.version
         }
     }
 

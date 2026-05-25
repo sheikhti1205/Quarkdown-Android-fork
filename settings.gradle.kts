@@ -1,5 +1,6 @@
 pluginManagement {
     repositories {
+        google()
         gradlePluginPortal()
         mavenCentral()
     }
@@ -25,3 +26,4 @@ include("quarkdown-quarkdoc")
 include("quarkdown-quarkdoc-reader")
 include("quarkdown-install-layout-navigator")
 include("quarkdown-lsp")
+include("quarkdown-android")
