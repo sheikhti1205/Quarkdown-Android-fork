@@ -6,12 +6,7 @@
 name: Distribution verification
 
 on:
-  push:
-    branches: [ main ]
-    paths:
-      - '**/build.gradle.kts'
-      - 'gradle.properties'
-      - '.github/workflows/gradle-distribution-verify.yml'
+  workflow_dispatch:
   pull_request:
     paths:
       - '**/build.gradle.kts'

@@ -3,15 +3,9 @@
 name: Gradle deploy
 
 on:
+  workflow_dispatch:
   push:
-    branches: [ "main", "workflow-test" ]
     tags: [ "v*" ]
-    paths-ignore:
-      - '*.md'
-      - '**/README.md'
-      - 'LICENSE'
-      - '.github/ISSUE_TEMPLATE/**'
-      - '.github/FUNDING.yml'
 
 jobs:
   test:
