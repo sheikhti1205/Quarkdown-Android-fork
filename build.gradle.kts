@@ -101,7 +101,7 @@ tasks.register("quarkdocGenerateAll") {
     description = "Generates the Quarkdoc documentation for all modules."
 
     dependencies {
-        subprojects.forEach {
+        subprojects.filter { it.name != "quarkdown-android" }.forEach {
             dokka(it)
         }
     }
@@ -112,12 +112,14 @@ tasks.register("quarkdocGenerateAll") {
 allprojects {
     fun asset(path: String): File = project(":quarkdown-quarkdoc").projectDir.resolve("src/main/resources/$path")
 
-    dokka {
-        pluginsConfiguration.html {
-            val year = Year.now().value
-            footerMessage.set("&copy; $year Quarkdown")
-            customAssets.from(*asset("assets/images").listFiles()!!)
-            customStyleSheets.from(asset("styles/stylesheet.css"))
+    if (name != "quarkdown-android") {
+        dokka {
+            pluginsConfiguration.html {
+                val year = Year.now().value
+                footerMessage.set("&copy; $year Quarkdown")
+                customAssets.from(*asset("assets/images").listFiles()!!)
+                customStyleSheets.from(asset("styles/stylesheet.css"))
+            }
         }
     }
 }
@@ -466,17 +468,19 @@ tasks.register("printVersion") {
 // Dependency updates
 
 allprojects {
-    tasks.dependencyUpdates {
-        rejectVersionIf {
-            Regex("[.-](alpha|beta|rc|cr|m|preview|b|ea)", RegexOption.IGNORE_CASE) in candidate.version
+    if (name != "quarkdown-android") {
+        tasks.dependencyUpdates {
+            rejectVersionIf {
+                Regex("[.-](alpha|beta|rc|cr|m|preview|b|ea)", RegexOption.IGNORE_CASE) in candidate.version
+            }
         }
-    }
 
-    tasks.useLatestVersions {
-        updateBlacklist =
-            listOf(
-                "org.jetbrains.kotlin",
-                "org.jetbrains.dokka",
-            )
+        tasks.useLatestVersions {
+            updateBlacklist =
+                listOf(
+                    "org.jetbrains.kotlin",
+                    "org.jetbrains.dokka",
+                )
+        }
     }
 }
